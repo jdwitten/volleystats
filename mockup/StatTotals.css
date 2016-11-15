@@ -1,0 +1,45 @@
+h1 {
+    font-family: sans-serif;
+    color: darkslategray;
+    font-size: 40pt;
+    text-decoration: underline;
+    width: 450px;
+}
+table.a {
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: thin solid black;
+}
+th{
+    font-size: 14px;
+    text-align: center;
+    table-layout: fixed;
+    min-width: 40px;
+    height: 60px;
+    background-color: skyblue;
+    color: black;
+    border: thin solid black;
+    border-bottom:  solid black;
+}
+tr td{
+    font-size: 14px;
+    text-align: center;
+    table-layout: fixed;
+    min-width: 40px;
+    height: 30px;
+    background-color: white;
+    border: thin solid black;
+    border-left-style: dotted;
+    border-right-style: dotted;
+}
+.button {
+    font-size: 20px;
+    text-align: center;
+    table-layout: fixed;
+    border: thin solid black;
+    background-color: darkslategray;
+    color: white;
+}
+body {
+    background-color: lightgrey;
+}
