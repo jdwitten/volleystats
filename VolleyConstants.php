@@ -1,4 +1,4 @@
-<php?
+<?php
 
 class SkillLevel
 {
@@ -23,16 +23,15 @@ class StatType
 	const KILL = 1;
 	const HIT_ATTEMPT = 2;
 	const HIT_ERROR = 3;
-	const FULL_BLOCK = 4;
-	const HALF_BLOCK = 5;
-	const BLOCKING_ERROR = 6;
-	const ASSIST = 7;
-	const SET_ERROR = 8;
-	const DIG = 9;
-	const PASS_ERROR = 10;
-	const ACE = 11;
-	const SERVING_ERROR = 12;
-	const SERVING_ATTEMPT = 13;
+	const BLOCK = 4;
+	const BLOCKING_ERROR = 5;
+	const ASSIST = 6;
+	const SET_ERROR = 7;
+	const DIG = 8;
+	const PASS_ERROR = 9;
+	const ACE = 10;
+	const SERVING_ERROR = 11;
+	const SERVING_ATTEMPT = 12;
 
 }
 

@@ -1,20 +1,28 @@
-<php?
-include(User.php)
-include(Team.php)
-include(Player.php)
+<?php
+include_once 'User.php';
+include_once 'Team.php';
+include_once 'Player.php';
+include_once 'Stat.php';
+include_once 'VolleyConstants.php';
 
 class DataInterface
 {
-	public function createUser($fname, $lname, $uname, $pass, $uid, $email)
+	public function __construct()
+	{
+	
+	}
+	public function createUser($fname, $lname, $uname, $pass, $email)
 	{
 		//Do stuff here to check validation of User info
 
 		//Try to insert new user into the database
 
 		//Create and return a new user object
+
+		return new User($fname, $lname, $uname, $pass, $email, 1);
 	}
 
-	public function getExistingUser($uid)
+	public function getUser($uid)
 	{
 		//Fetch User from the database
 		//Create and return a User object
@@ -27,11 +35,8 @@ class DataInterface
 	}
 
 	public function createPlayer($pid, $fname, $lname, $position1, $position2, $number, $team)
-
-	public function getExistingTeam($team)
 	{
-		//Get Team from the database
-		//Return a Team object
+
 	}
 
 	public function updatePlayer($player)
@@ -44,9 +49,19 @@ class DataInterface
 		//update the fields of a team object
 	}
 
-
-
-
+	public function getTeamIds($userId)
+	{
+		//get all the team ids associated with a user
+		return array(1,2,3);
+	}
+	public function getTeam($teamId)
+	{
+		return new Team(1, "UNC Tarheels", "Chapel Hill", "Collegiate Club", 1);
+	}
+	public function getStat($pid, $stat)
+	{
+		return new Stat($stat,rand(1,15));
+	}
 
 
 

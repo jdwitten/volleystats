@@ -1,23 +1,22 @@
-<php?
+<?php
 
 class User
 {
 	private $first_name;
 	private $last_name;
 	private $user_name;
-	private $user_id;
 	private $password;
 	private $email;
+	private $user_id;
 
 	//Constructor 
-	public function __construct($fname, $lname, $uname, $pass, $uid, $email)
-	{
+	public function __construct($fname, $lname, $uname, $pass, $email, $uid){
 		$this->first_name = $fname;
 		$this->last_name = $lname;
 		$this->user_name = $uname;
 		$this->password = $pass;
-		$this->user_id = $uid;
 		$this->email = $email;
+		$this->user_id = $uid;
 	}
 
 	//Getters for the user class
@@ -40,8 +39,5 @@ class User
 
 
 }
-
-
-
 
 ?>

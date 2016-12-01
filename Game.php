@@ -1,4 +1,4 @@
-<php?
+<?php
 include(DataInterface.php);
 
 class Game
