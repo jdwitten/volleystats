@@ -1,17 +1,25 @@
-
-var updateCurrentTeam = function(team){
-		$.ajax({
-			url: "VolleyAPI.php",
-			data: { action: "current_team"},
-			datatype: 'jsonp',
-			success: function(data){ 
-				team = parseTeam(data.team)
-				team = calculateStats(team, 1,1,1,1,1);
-
-			},
-			type: 'GET'
-		});
+var buildEditPlayers = function(team){
+	$("#player-collection").empty();
+	console.log(team)
+	var players = team.players;
+	for(var i=0; i<players.length;i++){
+		var player = players[i];
+		console.log(player);
+		var element = $("<li id='player_container_"+player.id+"'></li>");
+		var header = $("<div class='collapsible-header'><i class='material-icons'>perm_identity</i>"+player.fname+" " + player.lname+"</div>")
+		var body = $("<div class='collapsible-body'></div>");
+		var row = $("<div class='row valign-wrapper'></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_first_name_"+player.id+"' type='text' value="+player.fname+"><label for='new_first_name'>First Name</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_last_name_"+player.id+"' type='text' value="+player.lname+"><label for='new_last_name'>Last Name</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_number_"+player.id+"' type='number' value="+player.number+"><label for='new_number'>Number</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_position_"+player.id+"' type='text' value="+player.position+"><label for='new_position'>Position</label></div>")
+		row.append("<div class='col s2'><a class='btn-floating btn-small waves-effect waves-light blue valign edit-player' id='edit_player_"+player.id+"'><i class='material-icons'>input</i></a></div>")
+		body.append(row);
+		element.append(header, body);
+		$("#player-collection").append(element);
 	}
+	Materialize.updateTextFields();
+}
 
 var getGames = function(team){
 		$.ajax({
@@ -26,34 +34,46 @@ var getGames = function(team){
 					var game = new Game();
 					parseCurrentGame(data.games[i], game);
 					// add new option
-					$("select").append($("<option id='game_"+ game.id+"'>"+game.opponent+"</option>"));
+					$("#data-objects").append($("<option id='game_"+ game.id+"'>"+game.opponent+"</option>"));
 					// trigger event
-					$("select").trigger('contentChanged');
+					$("#data-objects").trigger('contentChanged');
 				}
 			},
 			type: 'GET'
 		});
 	}
 
-var calculateStats = function(team, teamID, gameIDs, sets, winningMargin, trailingMargin){
+var refreshTeam = function(team, gameID,setNum,yourMinScore, yourMaxScore, opponentMinScore, opponentMaxScore,
+    					minScoreDifference, maxScoreDifference){
 		$.ajax({
 			url: "VolleyAPI.php",
-			data: { action: "current_team_stats"},
+			data: { action: "current_team_stats",
+					gameID: gameID,
+					setNum: setNum,
+					yourMinScore: yourMinScore,
+					yourMaxScore: yourMaxScore,
+					opponentMinScore: opponentMinScore,
+					opponentMaxScore: opponentMaxScore,
+					minScoreDifference: minScoreDifference,
+					maxScoreDifference: maxScoreDifference
+			},
 			datatype: 'jsonp',
 			success: function(data){
 				team = parseTeam(data.team)
 				buildTable(team);
 				buildStartingOptions(team);
 				getGames(team);
+				buildEditPlayers(team);
 			},
 			type: 'GET' 
 		});
 	}
 
+
 var buildTable = function(team){
-		console.log(team)
 		$("#team_name").empty();
 		$("#team_name").html(team.name);
+		$("#stat_table tbody").empty();
 		for(var i=0; i<team.players.length; i++){
 			var row = $("<tr></tr>");
 			var player = team.players[i];
@@ -78,8 +98,6 @@ var buildTable = function(team){
 
 
 
-
-
 $(document).ready(function() {
 	  $('.datepicker').pickadate({
     selectMonths: true, // Creates a dropdown to control month
@@ -90,29 +108,68 @@ $(document).ready(function() {
   		$(this).material_select();
 	});
     $('select').material_select();
-    currentTeam = new Team();
-    currentTeam  = calculateStats(currentTeam,1,1,1,1,1);  
+    var currentTeam = new Team();
+    currentTeam  = refreshTeam(currentTeam,"all","all",1,1,1,1,1,1);  
 
     $("#filter-open").click(function(){
     	$(".modal").show();
     	$("#modal-overlay").show();
     })
+    $("#modal-filter").click(function(){
+    	var gameID = $("#game-options").children(":selected").attr("id");
+    	gameID = gameID.split("game_")[1];
+    	var setNum = $("#set_num").val();
+    	var yourMinScore = $("#your_min_score").val();
+    	var yourMaxScore = $("#your_max_score").val();
+    	var opponentMinScore = $("#opp_min_score").val();
+    	var opponentMaxScore = $("#opp_max_score").val();
+    	var minScoreDifference = $("#min_score_diff").val();
+    	var maxScoreDifference = $("#max_score_diff").val();
+
+    	refreshTeam(currentTeam, gameID,setNum,yourMinScore, yourMaxScore, opponentMinScore, opponentMaxScore,
+    					minScoreDifference, maxScoreDifference);
+    })
+    $("#modal-cancel").click(function(){
+    	$(".modal").hide();
+    	$("#modal-overlay").hide();
+    });
+    $(document).on("click",".edit-player",function(){
+    	console.log("clicked edit player");
+    	var id = $(this).attr("id").split("edit_player_")[1];
+    	var fname = $("#new_first_name_"+id).val();
+    	var lname = $("#new_last_name_"+id).val();
+    	var num = $("#new_number_"+id).val();
+    	var position = $("#new_position_"+id).val();
+    	currentTeam = refreshTeam()
+    	updatePlayer(currentTeam, id, fname, lname, num, position);
+    })
   });
 
-
-
-
-function getCurrentTeam(){
-
+var updatePlayer = function(team, id, fname, lname, num, position){
+	$.ajax({
+			url: "VolleyAPI.php",
+			data: { action: "update_player",
+					pid: id,
+					fname: fname,
+					lname: lname,
+					position: position,
+					number: num,
+					teamId: team.id,
+			},
+			datatype: 'jsonp',
+			success: function(data){
+				team = refreshTeam(team);
+				console.log("updated Player");
+			},
+			type: 'POST' 
+		});
 }
-
 
 function buildStartingOptions(team){
 	var container = $("#starting_options");
 	container.empty();
 
 	for(var i=0; i<team.players.length; i++){
-		console.log(i);
 		var player = team.players[i];
 		var op = $("<p></p>");
 		var input = $("<input type='checkbox' name='start_"+player.id+"' value='true' id='start_"+player.id+"'/>")

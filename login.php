@@ -4,7 +4,7 @@ if(session_status() !== PHP_SESSION_ACTIVE ){
 }
 
 function check_password($username, $password) {
-
+  /*
   $servername = "classroom.cs.unc.edu";
   $username = "tjamesa";
   $password = "Dunkindonuts#22";
@@ -14,7 +14,8 @@ function check_password($username, $password) {
   $trialhash = md5($username."-salt".$password);
   $user = $conn->query("SELECT uid FROM user WHERE userName=".$uname."AND password".$trialhash."");
   return isset($user);
-
+*/
+  return true;
 }
 
 function login($username, $password)

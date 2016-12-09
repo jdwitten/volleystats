@@ -100,6 +100,7 @@ var Game = function(){
 }
 
 function parseTeam(json_team){
+	console.log(json_team);
 	var team = new Team();
 	team.user = json_team.user;
 	var json_players = json_team.players;

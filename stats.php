@@ -65,24 +65,34 @@ echo "<!-- The Modal -->
         	</div>
         </div>
         <div class='row'>
+          <div class='input-field col s6'>
+              <input id='your_min_score' type='number' class='validate'>
+              <label for='your_min_score'>Your Min Score</label>
+          </div>
         	<div class='input-field col s6'>
           		<input id='your_max_score' type='number' class='validate'>
           		<label for='your_max_score'>Your Max Score</label>
         	</div>
-        	<div class='input-field col s6'>
-          		<input id='your_min_score' type='number' class='validate'>
-          		<label for='your_min_score'>Your Min Score</label>
-        	</div>
         </div>
         <div class='row'>
+          <div class='input-field col s6'>
+              <input id='opp_min_score' type='number' class='validate'>
+              <label for='opp_min_score'>Opponent Min Score</label>
+          </div>
         	<div class='input-field col s6'>
           		<input id='opp_max_score' type='number' class='validate'>
           		<label for='opp_max_score'>Opponent Max Score</label>
         	</div>
-        	<div class='input-field col s6'>
-          		<input id='opp_min_score' type='number' class='validate'>
-          		<label for='opp_min_score'>Opponent Min Score</label>
-        	</div>
+        </div>
+        <div class='row'>
+          <div class='input-field col s6'>
+              <input id='min_score_diff' type='number' class='validate'>
+              <label for='min_score_diff'>Min Score Difference</label>
+          </div>
+          <div class='input-field col s6'>
+              <input id='max_score_diff' type='number' class='validate'>
+              <label for='max_score_diff'>Max Score Difference</label>
+          </div>
         </div>
   	</div>
     <div class='modal-footer'>
@@ -96,7 +106,7 @@ echo '<div class="section">
     <div class="col s12">
       <ul class="tabs">
         <li class="tab col s4"><a class="blue-text active" href="#stats">Team Statistics</a></li>
-        <li class="tab col s4"><a class="blue-text" href="#roster">Edit Roster</a></li>
+        <li class="tab col s4"><a class="blue-text" href="#edit">Edit Roster</a></li>
         <li class="tab col s4"><a class="blue-text" href="#game">Start Game</a></li>
       </ul>
     </div>
@@ -132,6 +142,14 @@ echo '<table id="stat_table" class="bordered centered blue white-text">
     <tbody>
     </tbody>';
 echo "</table>";
+echo "</div>";
+
+echo "<div id='edit'>";
+echo "<div class='container'>";
+echo "<h3 id='team_name_edit'></h3>";
+echo " <ul class='collapsible' data-collapsible='accordion' id='player-collection'>;
+      </ul>";
+echo "</div>";
 echo "</div>";
 
 echo "<div id='game' class='section'>";

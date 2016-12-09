@@ -18,20 +18,57 @@ if($_GET && $_GET['action'])
 
 	//Calculate the specified stats for the current team
 	else if($_GET["action"] == "current_team_stats"){
+
+		if($_GET["gameID"]==="All"){$gameID=null;}
+		else{$gameID = $_GET["gameID"];}
+
+		if($_GET["setNum"]==="All"){$setNum=null;}
+		else{$setNum = $_GET["setNum"];}
+
+		$yourMinScore = $_GET["yourMinScore"];
+		$yourMaxScore = $_GET["yourMaxScore"];
+		$opponentMinScore = $_GET["opponentMinScore"];
+		$opponentMaxScore = $_GET["opponentMaxScore"];
+		$minScoreDifference = $_GET["minScoreDifference"];
+		$maxScoreDifference = $_GET["maxScoreDifference"];
 		foreach($_SESSION["current_team"]->getPlayers() as $player){
 			$player->clearStats();
-			$player->addStat($data_access->getStat($player->getId(),StatType::KILL));
-			$player->addStat($data_access->getStat($player->getId(),StatType::HIT_ATTEMPT));
-			$player->addStat($data_access->getStat($player->getId(),StatType::HIT_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::BLOCK));
-			$player->addStat($data_access->getStat($player->getId(),StatType::BLOCKING_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::ASSIST));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SET_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::DIG));
-			$player->addStat($data_access->getStat($player->getId(),StatType::PASS_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::ACE));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SERVING_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SERVING_ATTEMPT));
+			$player->addStat($data_access->getStat(StatType::KILL,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::HIT_ATTEMPT,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::HIT_ERROR,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::BLOCK,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::BLOCKING_ERROR,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::ASSIST,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::SET_ERROR,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::DIG,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::PASS_ERROR,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::ACE,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::SERVING_ERROR,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
+			$player->addStat($data_access->getStat(StatType::SERVING_ATTEMPT,$player->getId(), $gameID,
+							 $setNum, $yourMinScore, $yourMaxScore, $opponentMinScore, $opponentMaxScore,
+							 $minScoreDifference, $maxScoreDifference));
 		}
 		$response = array("success"=>true);
 		$response["team"] = $_SESSION["current_team"]->convertToArray();
@@ -70,8 +107,6 @@ if($_GET && $_GET['action'])
 		}
 		$response["games"] = $games;
 	}
-	header('Content-type: application/json');
-    echo json_encode($response);
 }
 if($_POST && $_POST["action"])
 {
@@ -104,5 +139,10 @@ if($_POST && $_POST["action"])
 
 		$data_access->createGame($_SESSION["active_game"]->getTeam1ID, $_SESSION["active_game"]->getTeam2Name(), $_SESSION["active_game"]->getCurrentSet(), $team1scores[0],$team1scores[1],$team1scores[2],$team1scores[3],$team1scores[4],$team1scores[5],$team2scores[0],$team2scores[1], $team2scores[2],$team2scores[3],$team2scores[4],$team1scores[5], 1);
 	}
+	else if($_POST["action"] ==="update_player"){
+		$response["success"] = true;
+	}
 }
+header('Content-type: application/json');
+echo json_encode($response);
 ?>
