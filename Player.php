@@ -23,13 +23,26 @@ class Player
 
 	public function clearStats()
 	{
-		unset($this->stats);
+		$this->stats = Array();
 	}
 
 	public function addStat($stat)
 	{
-		$this->stats = $stat;
+		$this->stats[] = $stat;
 	}
+	public function incrementStat($statCode, $value)
+	{
+		foreach($this->stats as $stat)
+		{
+			if($stat->getStatCode()===$statCode){
+				$stat->setValue($stat->getValue()+$value);
+				return true;
+			}
+		}
+		$this->stats[] = new Stat($statCode, $value);
+	}
+
+
 	public function getId(){return $this->player_id;}
 	public function getFirstName(){return $this->first_name;}
 	public function getLastName(){return $this->last_name;}

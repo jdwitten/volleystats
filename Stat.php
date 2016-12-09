@@ -14,6 +14,9 @@ class Stat
 		$this->value = $value;
 
 	}
+	public function getStatCode(){return $this->stat_code;}
+	public function getValue(){return $this->value;}
+	public function setValue($val){$this->value = $val;}
 
 	public function convertToArray()
 	{

@@ -1,6 +1,6 @@
 <?php
 include_once "DataInterface.php";
-session_start();
+
 class Team
 {
 	private $name;
@@ -21,9 +21,16 @@ class Team
 
 		$player1 = new Player(1, "Jonathan", "Witten", "OH", 14, 1);
 		$player2 = new Player(2, "Joe", "Black", "L", 2, 1);
-		$player3 = new Player(1, "TJ", "Andrews", "S", 6, 1);
+		$player3 = new Player(3, "TJ", "Andrews", "S", 6, 1);
+		$player4 = new Player(4, "Grace", "Busby", "RS", 9, 1);
+		$player5 = new Player(5, "Andrew", "Brown", "MB", 12, 1);
+		$player6 = new Player(6, "Hunter", "Bell", "MB", 15, 1);
+		$player7 = new Player(7,"Caleb", "Waters","OH", 3, 1);
+		$player8 = new Player(8,"Tim", "Creedon","S", 11, 1);
+		$player9 = new Player(9,"Woody", "Parrish","RS", 14, 1);
+		$player10 = new Player(10,"Nick", "Corbett","MB", 6, 1);
 
-		array_push($this->players, $player1, $player2, $player3);
+		array_push($this->players, $player1, $player2, $player3, $player4, $player5, $player6, $player7, $player8, $player9, $player10);
 
 	}
 
@@ -39,6 +46,7 @@ class Team
 
 	public function getPlayers(){return $this->players;}
 	public function getName(){return $this->name;}
+	public function getID(){return $this->team_id;}
 
 	public function convertToArray(){
 		$team = Array();
@@ -56,44 +64,4 @@ class Team
 	}
 
 }
-
-if($_GET)
-{
-	$data_access = new DataInterface();
-	if(!isset($_SESSION['current_team']))
-	{
-		$response = array("success"=>false);
-	}
-	else if($_GET["action"] == "get_current"){
-		$response = array("success"=>true);
-		$response["team"] = $_SESSION['current_team']->convertToArray();
-	}
-	else if($_GET["action"] == "calculate_stats"){
-		foreach($_SESSION["current_team"]->getPlayers() as $player){
-			$player->clearStats();
-			$player->addStat($data_access->getStat($player->getId(),StatType::KILL));
-			$player->addStat($data_access->getStat($player->getId(),StatType::HIT_ATTEMPT));
-			$player->addStat($data_access->getStat($player->getId(),StatType::HIT_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::BLOCK));
-			$player->addStat($data_access->getStat($player->getId(),StatType::BLOCKING_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::ASSIST));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SET_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::DIG));
-			$player->addStat($data_access->getStat($player->getId(),StatType::PASS_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::ACE));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SERVING_ERROR));
-			$player->addStat($data_access->getStat($player->getId(),StatType::SERVING_ATTEMPT));
-		}
-		$response = array("success"=>true);
-		$response["team"] = $_SESSION["current_team"]->convertToArray();
-	}else{}
-	header('Content-type: application/json');
-    echo json_encode($response);
-}
-
-
-
 ?>
-
-
-

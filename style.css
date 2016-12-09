@@ -20,3 +20,38 @@
   background-color: #2196f3 !important; 
   color: #2196f3 !important;
 }
+
+#score_table th, td{
+  text-align:center;
+}
+.score_row{
+  margin:0px;
+  padding:0px;
+}
+h3{
+  margin:0px;
+}
+
+#minus{
+  font-size:5px;
+}
+
+#toast-container {
+  top: auto !important;
+  right: auto !important;
+  bottom: 10%;
+  left:7%;  
+}
+#modal-overlay{
+  display:none;
+  z-index:4999;
+  height:100%;
+  width:100%;
+  position:fixed;
+  top:0px;
+  left:0px;
+}
+
+.modal{
+  z-index:5000;
+}

@@ -1,12 +1,15 @@
 <?php
+
 include_once 'DataInterface.php';
 include_once 'VolleyConstants.php';
 include_once 'Team.php';
 include_once 'Player.php';
 include_once 'User.php';
 include_once 'Stat.php';
-
-session_start();
+if(session_status() !== PHP_SESSION_ACTIVE ){
+  session_start();
+}
+include_once("authenticate.php");
 if(!isset($_SESSION['current_user'])){
 	header("index.html");
 	exit();
@@ -41,10 +44,53 @@ echo '<!DOCTYPE html>
 <script src="js/materialize.js"></script>
 <script src="TeamManagement.js"></script>
 <script src="VolleyConstants.js"></script>
+<script src="VolleyDataObjects.js"></script>
 </head>
 <body>';
 
 require_once "Nav.php";
+echo "<!-- The Modal -->
+<div id='modal1' class='modal'>
+   	<div class='modal-content'>
+    	<h4 id='modal-header'>Filter</h4>
+    	<div class='row'>
+    		<div class='input-field col s6'>
+    			<select id='game-options'>
+    			</select>
+    			<label>Games</label>
+    		</div>
+    		<div class='input-field col s6'>
+          		<input id='set_num' type='number' class='validate'>
+          		<label for='set_num'>Set Number</label>
+        	</div>
+        </div>
+        <div class='row'>
+        	<div class='input-field col s6'>
+          		<input id='your_max_score' type='number' class='validate'>
+          		<label for='your_max_score'>Your Max Score</label>
+        	</div>
+        	<div class='input-field col s6'>
+          		<input id='your_min_score' type='number' class='validate'>
+          		<label for='your_min_score'>Your Min Score</label>
+        	</div>
+        </div>
+        <div class='row'>
+        	<div class='input-field col s6'>
+          		<input id='opp_max_score' type='number' class='validate'>
+          		<label for='opp_max_score'>Opponent Max Score</label>
+        	</div>
+        	<div class='input-field col s6'>
+          		<input id='opp_min_score' type='number' class='validate'>
+          		<label for='opp_min_score'>Opponent Min Score</label>
+        	</div>
+        </div>
+  	</div>
+    <div class='modal-footer'>
+      	<a href='#!'' id='modal-filter' class='modal-action modal-close waves-effect waves-green btn-flat'>Filter</a>
+      	<a href='#!' id='modal-cancel' class='modal-action modal-close waves-effect waves-red btn-flat'>Cancel</a>
+   	</div>
+</div>";
+echo "<div id='modal-overlay'></div>";
 echo '<div class="section">
 		  <div class="row">
     <div class="col s12">
@@ -57,35 +103,14 @@ echo '<div class="section">
   </div>';
 
 echo "<div id='stats'>";
-	/*
-		<div class='row'>
-			<div class='col s1'></div>
-			<a class='dropdown-button btn grey white-text col s3' style='border-color:blue' href='#' data-activates='dropdown1'>".$current_team->getName()."</a>
-			<ul id='dropdown1' class='dropdown-content'>";
-		foreach($_SESSION['teams'] as $team){
-			echo "<li>". $team->getName()."</li>";
-		}
-echo "</ul><div class='col s1'></div>";		
+echo "<div class='row valign-wrapper'>";
+echo "<h2 id='team_name' class='col s6 valign'></h2>";
+echo "<div class='col s6 right-align valign'>";
+echo "<a class='btn-floating btn-large center-align amber' id='filter-open'><i class='material-icons'>search</i></a>";
+echo "</div></div>";
+echo '<table id="stat_table" class="bordered centered blue white-text">
 
-echo "<a class='dropdown-button btn grey white-text col s2' style='border-color:blue' href='#' data-activates='dropdown1'><i class='material-icons left'>import_export</i></a>
-	<ul id='dropdown2' class='dropdown-content'>";
-
-		foreach($_SESSION['teams'] as $team){
-			echo "<li>". $team->getName()."</li>";
-		}	
-echo "</ul><div class='col s1'></div>";
-echo "<a class='dropdown-button btn grey white-text col s2' style='border-color:blue' href='#' data-activates='dropdown1'><i class='material-icons left'>shuffle</i></a>
-			<ul id='dropdown2' class='dropdown-content'>";
-
-		foreach($_SESSION['teams'] as $team){
-			echo "<li>". $team->getName()."</li>";
-		}
-
-
-echo '</ul></div>';
-
-echo '<table class="bordered centered blue white-text">
-
+	<thead>
     <tr class="blue lighten-3 black-text">
       <th>Name</th>
       <th>Number</th>
@@ -102,31 +127,65 @@ echo '<table class="bordered centered blue white-text">
 	  <th>Aces</th>
 	  <th>Serving Errors</th>
 	  <th>Serving Attempts</th>
-    </tr>';
-
-foreach($current_team->getPlayers() as $player){
-	echo '<tr>
-	<td>'.$player->getFirstName()." ".$player->getLastName().'</td>
-	<td>'.$player->getNumber().'</td>
-	<td>'.$player->getPosition().'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::KILL).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::HIT_ATTEMPT).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::HIT_ERROR).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::BLOCK).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::BLOCKING_ERROR).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::ASSIST).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::SET_ERROR).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::DIG).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::PASS_ERROR).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::ACE).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::SERVING_ERROR).'</td>
-	<td>'.$data_access->getStat($player->getId(),StatType::SERVING_ATTEMPT).'</td>
-	</tr>';
-
-}
-echo "</table><";
-*/
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>';
+echo "</table>";
 echo "</div>";
+
+echo "<div id='game' class='section'>";
+echo "<div class='container'>";
+echo "<h3>Start a Game</h3>";
+echo "<form class='col s12' action='RecordGame.php' method='post'>";
+echo "<div class='row'>";
+echo "<div class='input-field col s6'>
+          <input name='opponent_name' type=text class='validate'>
+          <label for='opponent_name'>Opponent Name</label>
+        </div>";
+echo "<div class='input-field col s3'>
+          <input name='opponent_wins' type=number class='validate'>
+          <label for='opponent_wins'>Opponent Wins</label>
+        </div>";
+echo "<div class='input-field col s3'>
+          <input name='opponent_losses' type=number class='validate'>
+          <label for='opponent_losses'>Opponent Losses</label>
+        </div>";
+echo "</div><div class='row'>";
+echo "<div class='input-field col s3'>
+    	<select name='location'>
+      		<option value='' disabled selected>Select</option>
+      		<option value='home'>Home</option>
+      		<option value='away'>Away</option>
+    	</select>
+    <label>Location</label>
+  	</div>";
+echo "<div class='input-field col s3'>
+		<input name='date' type='date' class='datepicker'>
+		<label for='date'>Date</label>
+	</div>";
+echo "<div class='input-field col s3'>
+    	<select name='max_sets'>
+      		<option value='' disabled selected>Select</option>
+      		<option value='1'>1</option>
+      		<option value='3'>3</option>
+      		<option value='5'>5</option>
+
+    	</select>
+    <label>Best Of</label>
+  	</div>";
+echo "</div>";
+echo "<h3>Starting Lineup</h3>";
+echo "<div class='row' id='starting_options'></div>";
+echo "<button class='btn waves-effect waves-light' type='submit' name='action'>Start
+   			 <i class='material-icons right'>send</i>
+  		</button>";
+echo "</form>";
+echo "</div>";
+echo "</div>";
+
+
+
 echo '</body></html>';
 
 ?>

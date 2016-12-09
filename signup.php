@@ -1,10 +1,9 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-include "DataInterface.php";
-
+if(session_status() !== PHP_SESSION_ACTIVE ){
+  session_start();
+}
+include_once "DataInterface.php";
+include("login.php");
 
 $data = new DataInterface();
 
@@ -33,13 +32,25 @@ if($_POST){
     $_SESSION['errors']['email'] = "Invalid email";
   }
 
-  $user = $data->createUser($_POST['first_name'], $_POST['last_name'], $_POST['username'], $_POST['password'], $_POST['email']);
-  if(!$user) $_SESSION['errors']['general'] = "Oops! Something went wrong please try again!";
-  else $_SESSION['current_user'] = $user;
-
-  if(isset($_SESSION['errors']) && count($_SESSION['errors'])>0) $get_string = "?success=false";
-  else $get_string = "?success=true";
-
+  if(isset($_SESSION['errors']) && count($_SESSION['errors'])>0){
+    $get_string = "?success=false";
+  }
+  else{
+    $user = $data->createUser($_POST['first_name'], $_POST['last_name'], $_POST['username'],
+                             $_POST['password'], $_POST['email']);
+    if(is_null($user)){
+      $_SESSION['errors']['general'] = "Oops! Something went wrong please try again!";
+      $get_string = "?success=false";
+    }
+    else{
+      if(login($_POST["username"], $_POST["password"])){
+          $_SESSION['current_user'] = $user;
+          $get_string = "?success=true";
+      }else{
+          $get_string = "?success=false";
+      }
+    }
+  }
   unset($_POST);
   header("Location: ".$_SERVER['REQUEST_URI'].$get_string);
   exit();
