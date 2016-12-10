@@ -229,7 +229,9 @@ var sendStat = function(playerID, statCode, value, playerScore, opponentScore, s
 		success: function(data){ 
 			console.log("successfully uploaded stat")
 			getGameStats();
-			sendToast("Recorded stat");
+			if(!statCode==StatType.KILL){
+				sendToast("Recorded stat");
+			}
 		},
 		type: 'POST'
 		});
@@ -343,7 +345,7 @@ var buildTable = function(players){
 			var player = players[i];
 			row.append("<td>" + player.first_name + " " + player.last_name + "</td>")
 			row.append("<td>" + player.number + "</td>")
-			row.append("<td>" + player.position + "</td>")
+			row.append("<td>" + positionToString(player.position) + "</td>")
 			row.append("<td>" + player.stats[StatType.KILL-1].value + "</td>")
 			row.append("<td>" + player.stats[StatType.HIT_ATTEMPT-1].value + "</td>")
 			row.append("<td>" + player.stats[StatType.HIT_ERROR-1].value + "</td>")

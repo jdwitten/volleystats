@@ -7,13 +7,14 @@ var buildEditTeams = function(teams){
 	for(var i=0; i<teams.length;i++){
 		let team = teams[i];
 		element = $("<li id='team_container_"+team.id+"'></li>");
-		header = $("<div class='collapsible-header'><i class='material-icons'>perm_identity</i>"+team.name+"</div>")
+		header = $("<div class='collapsible-header'><i class='material-icons'>supervisor_account</i>"+team.name+"</div>")
 		body = $("<div class='collapsible-body'></div>");
 		row = $("<div class='row valign-wrapper'></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_team_name_"+team.id+"' type='text' value="+team.name+"><label for='new_team_name'>Name</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_team_name_"+team.id+"' type='text' value='"+team.name+"'><label for='new_team_name'>Name</label></div>")
 		row.append("<div class='input-field col s2 valign'><select  id='new_skill_"+team.id+"' value='"+team.skillLevel+"'><option value='1'>RECREATION</option><option value='2'>MIDDLE SCHOOL</option><option value='3'>HIGH SCHOOL</option><option value='4'>COLLEGIATE</option><option value='5'>CLUB U12</option><option value='6'>CLUB U13</option><option value='7'>CLUB U14</option><option value='8'>CLUB U15</option><option value='9'>CLUB U16</option>'<option value='10'>CLUB U17</option><option value='11'>CLUB U18</option><option value='12'>CLUB U19</option>)</select><label>Skill Level</label></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_location_"+team.id+"' type='text' value="+team.location+"><label for='new_location'>Location</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_location_"+team.id+"' type='text' value='"+team.location+"'><label for='new_location'>Location</label></div>")
 		row.append("<div class='col s2'><a class='btn-floating btn-small waves-effect waves-light blue valign edit-team' id='edit_team_"+team.id+"'><i class='material-icons'>input</i></a></div>")
+		row.append("<div class='col s2'><a class='btn-floating btn-small waves-effect waves-light blue valign edit-team' id='edit_team_"+team.id+"'><i class='material-icons'>delete</i></a></div>")
 		body.append(row);
 
 		element.append(header, body);
@@ -28,7 +29,7 @@ var buildEditTeams = function(teams){
 		})
 	}
 	element = $("<li id='add_team_container'></li>");
-	header = $("<div class='collapsible-header'><i class='material-icons'>add</i>Add Team</div>")
+	header = $("<div class='collapsible-header green-text'><i class='material-icons'>add</i>Add Team</div>")
 	body = $("<div class='collapsible-body'></div>");
 	row = $("<div class='row valign-wrapper'></div>")
 	row.append("<div class='input-field col s2 valign'><input id='add_team_name' type='text'><label for='new_team_name'>Name</label></div>")
@@ -61,10 +62,10 @@ var buildEditPlayers = function(team){
 		header = $("<div class='collapsible-header'><i class='material-icons'>perm_identity</i>"+player.fname+" " + player.lname+"</div>")
 		body = $("<div class='collapsible-body'></div>");
 		row = $("<div class='row valign-wrapper'></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_first_name_"+player.id+"' type='text' value="+player.fname+"><label for='new_first_name'>First Name</label></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_last_name_"+player.id+"' type='text' value="+player.lname+"><label for='new_last_name'>Last Name</label></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_number_"+player.id+"' type='number' value="+player.number+"><label for='new_number'>Number</label></div>")
-		row.append("<div class='input-field col s2 valign'><input id='new_position_"+player.id+"' type='text' value="+player.position+"><label for='new_position'>Position</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_first_name_"+player.id+"' type='text' value='"+player.fname+"'><label for='new_first_name'>First Name</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_last_name_"+player.id+"' type='text' value='"+player.lname+"'><label for='new_last_name'>Last Name</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_number_"+player.id+"' type='number' value='"+player.number+"'><label for='new_number'>Number</label></div>")
+		row.append("<div class='input-field col s2 valign'><input id='new_position_"+player.id+"' type='text' value='"+player.position+"'><label for='new_position'>Position</label></div>")
 		row.append("<div class='col s2'><a class='btn-floating btn-small waves-effect waves-light blue valign edit-player' id='edit_player_"+player.id+"'><i class='material-icons'>input</i></a></div>")
 		body.append(row);
 		element.append(header, body);
@@ -81,7 +82,7 @@ var buildEditPlayers = function(team){
 		})
 	}
 	element = $("<li id='add_player_container'></li>");
-	header = $("<div class='collapsible-header'><i class='material-icons'>add</i>Add Player</div>")
+	header = $("<div class='collapsible-header green-text'><i class='material-icons'>add</i>Add Player</div>")
 	body = $("<div class='collapsible-body'></div>");
 	row = $("<div class='row valign-wrapper'></div>")
 	row.append("<div class='input-field col s2 valign'><input id='add_player_fname' type='text'><label for='new_first_name'>First Name</label></div>")
