@@ -18,15 +18,18 @@ if(!isset($_SESSION['current_user'])){
 $data_access = new DataInterface();
 
 $cur_user = $_SESSION['current_user'];
-$_SESSION["current_team"] = $data_access->getTeam(1);
-$team_ids = $data_access->getTeamIds($cur_user->getUserId());
-foreach($team_ids as $id){
-	$teams[] = $data_access->getTeam($id);
+
+if(!isset($_SESSION["current_team"])){
+  $teams = $data_access->getTeamIds($_SESSION["current_user"]->getUserId());
+  if(count($teams)>0){
+    $_SESSION["current_team"] = $data_access->getTeam(intval($teams[0]));
+  }
+  else{
+    $_SESSION["current_team"] = $data_access->createTeam("Make a Team!", "Edit Me!", 1, $_SESSION["current_user"]->getUserId());
+    $_SESSION["current_team"]->addPlayer($data_access->createPlayer("Example", "Player",1,1,$_SESSION["current_team"]->getID()));
+  }
 }
-if(isset($teams)){
-	$_SESSION['teams'] = $teams;
-	$current_team = $teams[count($teams)-1];
-}
+
 
 
 echo '<!DOCTYPE html>
@@ -42,9 +45,9 @@ echo '<!DOCTYPE html>
 <link href="style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/materialize.js"></script>
+<script src="VolleyDataObjects.js"></script>
 <script src="TeamManagement.js"></script>
 <script src="VolleyConstants.js"></script>
-<script src="VolleyDataObjects.js"></script>
 </head>
 <body>';
 
@@ -60,9 +63,16 @@ echo "<!-- The Modal -->
     			<label>Games</label>
     		</div>
     		<div class='input-field col s6'>
-          		<input id='set_num' type='number' class='validate'>
-          		<label for='set_num'>Set Number</label>
-        	</div>
+          <select id='set_num'>
+            <option value='All'>All</option>
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=5>5</option>
+          </select>
+          <label>Sets</label>
+          </div>
         </div>
         <div class='row'>
           <div class='input-field col s6'>
@@ -105,9 +115,10 @@ echo '<div class="section">
 		  <div class="row">
     <div class="col s12">
       <ul class="tabs">
-        <li class="tab col s4"><a class="blue-text active" href="#stats">Team Statistics</a></li>
-        <li class="tab col s4"><a class="blue-text" href="#edit">Edit Roster</a></li>
-        <li class="tab col s4"><a class="blue-text" href="#game">Start Game</a></li>
+        <li class="tab col s3"><a class="blue-text active" href="#stats">Team Statistics</a></li>
+        <li class="tab col s3"><a class="blue-text" href="#edit">Edit Roster</a></li>
+        <li class="tab col s3"><a class="blue-text" href="#game">Start Game</a></li>
+        <li class="tab col s3"><a class="blue-text" href="#team" id="team-tab">Manage Teams</a></li>
       </ul>
     </div>
   </div>';
@@ -120,23 +131,24 @@ echo "<a class='btn-floating btn-large center-align amber' id='filter-open'><i c
 echo "</div></div>";
 echo '<table id="stat_table" class="bordered centered blue white-text">
 
+
 	<thead>
     <tr class="blue lighten-3 black-text">
-      <th>Name</th>
-      <th>Number</th>
-      <th>Position</th>
-      <th>Kills</th>
-      <th>Hitting Attempts</th>
-      <th>Hitting Errors</th>
-      <th>Blocks</th>
-	  <th>Blocking Errors</th>
-	  <th>Assists</th>
-	  <th>Setting Errors</th>
-	  <th>Digs</th>
-	  <th>Passing Errors</th>
-	  <th>Aces</th>
-	  <th>Serving Errors</th>
-	  <th>Serving Attempts</th>
+      <th class="sort-header" id="type_0">Name</th>
+      <th class="sort-header" id="type_0">Number</th>
+      <th class="sort-header" id="type_0">Position</th>
+      <th class="sort-header" id="type_1">Kills</th>
+      <th class="sort-header" id="type_2">Hitting Attempts</th>
+      <th class="sort-header" id="type_3">Hitting Errors</th>
+      <th class="sort-header" id="type_4">Blocks</th>
+	  <th class="sort-header" id="type_5">Blocking Errors</th>
+	  <th class="sort-header" id="type_6">Assists</th>
+	  <th class="sort-header" id="type_7">Setting Errors</th>
+	  <th class="sort-header" id="type_8">Digs</th>
+	  <th class="sort-header" id="type_9">Passing Errors</th>
+	  <th class="sort-header" id="type_10">Aces</th>
+	  <th class="sort-header" id="type_11">Serving Errors</th>
+	  <th class="sort-header" id="type_12">Serving Attempts</th>
     </tr>
     </thead>
     <tbody>
@@ -148,6 +160,14 @@ echo "<div id='edit'>";
 echo "<div class='container'>";
 echo "<h3 id='team_name_edit'></h3>";
 echo " <ul class='collapsible' data-collapsible='accordion' id='player-collection'>;
+      </ul>";
+echo "</div>";
+echo "</div>";
+
+echo "<div id='team'>";
+echo "<div class='container'>";
+echo "<h3 id='user_name_edit'></h3>";
+echo " <ul class='collapsible' data-collapsible='accordion' id='team-collection'>;
       </ul>";
 echo "</div>";
 echo "</div>";
@@ -199,6 +219,10 @@ echo "<button class='btn waves-effect waves-light' type='submit' name='action'>S
    			 <i class='material-icons right'>send</i>
   		</button>";
 echo "</form>";
+if(isset($_GET["error"]) && $_GET["error"]=="invalid_start"){
+  echo "<h5>You must start 6 Players</h5>";
+  unset($_GET);
+}
 echo "</div>";
 echo "</div>";
 

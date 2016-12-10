@@ -7,13 +7,13 @@ if(session_status() !== PHP_SESSION_ACTIVE ){
 include_once("authenticate.php");
 
 if($_POST){
-
 	$data = new DataInterface();
 	$game = new Game($_SESSION['current_team']->getID(), $_SESSION['current_team']->getName(),
 					 $_POST["opponent_name"], intval($_POST["opponent_wins"]),
 					 intval($_POST["opponent_losses"]), $_POST["location"], intval($_POST["max_sets"]));
 	$team = $_SESSION['current_team'];
 	$players = $team->getPlayers();
+	$playerCount = 0;
 	foreach($players as $player){
 		$player->clearStats();
 		$player->addStat(new Stat(StatType::KILL, 0));
@@ -30,16 +30,23 @@ if($_POST){
 		$player->addStat(new Stat(StatType::SERVING_ATTEMPT, 0));
 		if(isset($_POST["start_".$player->getID()])){
 			$game->addPlayerToActive($player);
+			$playerCount += 1;
 		}
 		else{
 			$game->addPlayerToInactive($player);
 		}
 	}
-	$_SESSION["active_game"] = $game;
-
-	unset($_POST);
-  	header("Location: ".$_SERVER['REQUEST_URI']);
-  	exit();
+	if($playerCount === 6){
+		$_SESSION["active_game"] = $game;
+		unset($_POST);
+  		header("Location: ".$_SERVER['REQUEST_URI']);
+  		exit();
+  	}
+  	else{
+  		unset($game);
+  		unset($players);
+  		header("Location: stats.php?error=invalid_start#game");
+  	}
 }
 
 include_once "Nav.php";

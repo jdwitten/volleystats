@@ -100,7 +100,6 @@ var Game = function(){
 }
 
 function parseTeam(json_team){
-	console.log(json_team);
 	var team = new Team();
 	team.user = json_team.user;
 	var json_players = json_team.players;
@@ -139,9 +138,73 @@ function parseCurrentGame(json_game, game){
 	game.mySetsWon = parseInt(json_game.mySetsWon);
 	game.opponentSetsWon = parseInt(json_game.opponentSetsWon);
 	game.maxSets = parseInt(json_game.maxSets);
-	game.id = parseInt(json_game.id);
+	game.id = parseInt(json_game.gameID);
 	return game;
 }
 
+function skillToString(skillLevel){
+    if(skillLevel == 1) {
+        return "Recreation";
+    } 
+    else if(skillLevel ==2) {
+        return "Middle School";
+    }
+    else if(skillLevel ==3) {
+        return "High School ";
+    }
+    else if(skillLevel ==4) {
+        return "Collegiate";
+    }
+    else if(skillLevel ==5) {
+        return "Club U12";
+    }
+    else if(skillLevel ==6) {
+        return "Club U13";
+    }
+    else if(skillLevel ==7) {
+        return "Club U14";
+    }
+    else if(skillLevel ==8) {
+        return "Club U15";
+    }
+    else if(skillLevel ==9) {
+        return "Club U16";
+    }
+    else if(skillLevel ==10) {
+        return "Club U17";
+    }
+    else if(skillLevel ==11) {
+        return "Club U18";
+    }
+    else if(skillLevel ==12) {
+        return "Club U19";
+    }
+    else {
+        return "Other";
+    }
+}
 
+function positionToString(position){
+    if(position == 1) {
+        return "OH";
+    } 
+    else if(position ==2) {
+        return "S";
+    }
+    else if(position ==3) {
+        return "OPP";
+    }
+    else if(position ==4) {
+        return "L";
+    }
+    else if(position ==5) {
+        return "DS";
+    }
+    else if(position ==6) {
+        return "MB";
+    }
+    else {
+        return "Other";
+    }
+}
 

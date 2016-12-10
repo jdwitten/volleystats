@@ -20,7 +20,10 @@ class Stat
 
 	public function convertToArray()
 	{
-		return Array("stat_code"=>$this->stat_code, "value"=>$this->value);
+		$arr = Array();
+		$arr["stat_code"] = $this->stat_code;
+		$arr["value"] = $this->value;
+		return $arr;
 	}
 
 

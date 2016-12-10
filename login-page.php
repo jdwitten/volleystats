@@ -1,5 +1,4 @@
 <?php
-ini_set('display_errors', 'Off');
 include("login.php");
 if($_POST){
 	if(login($_POST["username"], $_POST["password"])){
@@ -8,7 +7,6 @@ if($_POST){
 		exit();
 	}
 	else{
-		echo("invalid password");
 		$error = "Username or Password is invalid please try again";
 		unset($_POST);
 	}
@@ -30,6 +28,7 @@ if($_POST){
 <script src="js/materialize.js"></script>
 </head>
 <body>
+<h3 class="col s12 center-align">VolleyStats Login:</h3>
 <form action="login-page.php" method="post">
 	 <div class="row">
 	 	<div class="col s3"></div>
@@ -42,7 +41,7 @@ if($_POST){
     <div class="row">
 	 	<div class="col s3"></div>
         <div class="input-field col s6">
-          <input id="password" type="text" name="password" class="validate">
+          <input id="password" type="password" name="password" class="validate">
           <label for="password">Password</label>
         </div>
         <div class="col s3"></div>
@@ -55,7 +54,7 @@ if($_POST){
         <div class="col s3"></div>
     </div>
 </form>
-<h5 id="error" class="red-text"><?php
+<h5 id="error" class="red-text col s12 center-align"><?php
 if(isset($error)){
 	echo $error;
 }

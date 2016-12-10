@@ -3,7 +3,7 @@ if(session_status() !== PHP_SESSION_ACTIVE ){
   session_start();
 }
 include_once "DataInterface.php";
-include("login.php");
+include_once("login.php");
 
 $data = new DataInterface();
 
@@ -44,7 +44,6 @@ if($_POST){
     }
     else{
       if(login($_POST["username"], $_POST["password"])){
-          $_SESSION['current_user'] = $user;
           $get_string = "?success=true";
       }else{
           $get_string = "?success=false";

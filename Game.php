@@ -131,6 +131,8 @@ class Game
 	public function getTeam1ID(){return $this->team1ID;}
 	public function getTeam2Name(){return $this->team2Name;}
 	public function getTeam1Name(){return $this->team1Name;}
+	public function getCurrentSet(){return $this->currentSet;}
+	public function getAllStats(){return $this->stats;}
 
 	public function compileStats()
 	{

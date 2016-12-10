@@ -28,7 +28,8 @@ class Player
 
 	public function addStat($stat)
 	{
-		$this->stats[] = $stat;
+		if(isset($stat))
+			$this->stats[] = $stat;
 	}
 	public function incrementStat($statCode, $value)
 	{

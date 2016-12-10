@@ -31,24 +31,22 @@ $(document).ready(function(){
 	})
 	$(document).on("click",".end-game-team1",function(){
 		game.mySetsWon += 1;
-		game.currentSet += 1;
 		game.myCurrentScore = 0;
 		game.opponentCurrentScore = 0;
 		updateGame(game);
   		refreshGameLabels(game);
 		$(".modal").hide();
 		//Do some stuff here to end the game
-		window.location.href = 'stats.php';
+		saveGame();
 	})
 	$(document).on("click",".end-game-team2",function(){
 		game.opponentSetsWon += 1;
-		game.currentSet += 1;
 		game.myCurrentScore = 0;
 		game.opponentCurrentScore = 0;
 		updateGame(game);
   		refreshGameLabels(game);
 		$(".modal").hide();
-		//Do some stuff here to end the game
+		saveGame();
 		window.location.href = 'stats.php';
 	})
 	$(".activePlayer").click(function(){
@@ -129,6 +127,19 @@ $(document).ready(function(){
   	});
 
 })
+
+var saveGame = function(){
+	$.ajax({
+		url: "VolleyAPI.php",
+		data: { action: "save_game"},
+		datatype: 'json',
+		success: function(data){ 
+			console.log("Successfully saved the game");
+			window.location.href = 'stats.php';
+		},
+		type: 'POST'
+	});
+}
 
 var endSet = function(game, winner){
 	$("#modal-header").empty();
